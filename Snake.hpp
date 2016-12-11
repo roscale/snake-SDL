@@ -8,6 +8,7 @@ extern const int WINDOW_WIDTH;
 extern const int WINDOW_HEIGHT;
 extern const int BLOCK_SIZE;
 
+class Grid;
 class Food;
 
 class Snake
@@ -20,6 +21,7 @@ private:
 
 public:
 	Snake() {};
+
 	Point2D getPosition() const;
 
 	Snake& operator++();
@@ -29,8 +31,9 @@ public:
 	void left();
 	void right();
 
-	bool checkBiten();
+	bool checkBitten();
 	bool checkFoodEaten(Food *food);
+	bool containsBlock(Point2D block);
 
 	void update();
 	void draw(SDL_Renderer* renderer) const;

@@ -58,16 +58,15 @@ int main()
 		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 		SDL_RenderClear(renderer);
 
-		if (grid.checkCollision())
-		{
-			break;
-		}
+		if (grid.checkCollisions()) { break; }
 
 		snake.update();
 
-		food.draw(renderer);
-		snake.draw(renderer);
 		grid.draw(renderer);
+		snake.draw(renderer);
+		food.draw(renderer);
+
+
 
 		SDL_RenderPresent(renderer);
 

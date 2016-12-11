@@ -34,8 +34,15 @@ Grid::Grid(int width, int height) :
 	m_data[width/2][height/2] = BlockType::WALL;
 }
 
-void Grid::addSnake(Snake *snake) { m_snake = snake; }
-void Grid::addFood(Food *food) { m_food = food; }
+void Grid::addSnake(Snake *snake)
+{
+	m_snake = snake;
+}
+void Grid::addFood(Food *food)
+{
+	m_food = food;
+	food.addGrid(this); // To implement
+}
 
 void Grid::clear()
 {
@@ -44,11 +51,20 @@ void Grid::clear()
 			block = BlockType::AIR;
 }
 
-bool Grid::checkCollision()
+bool Grid::checkCollisions()
 {
-	if (m_snake->checkBiten())
+	if (m_snake->checkBitten())
 		return true;
-	m_snake->checkFoodEaten(m_food);
+	if (m_snake->checkFoodEaten(m_food))
+	{
+		++(*m_snake);
+		Point2D foodPos;
+		do
+		{
+			foodPos = m_food->generate();
+		}
+		while (m_data[foodPos.getX()][foodPos.getY()] != BlockType::AIR || m_snake->containsBlock(foodPos));
+	}
 
 	if (m_data[m_snake->m_position.getX()][m_snake->m_position.getY()] != BlockType::AIR)
 		return true;

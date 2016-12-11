@@ -33,7 +33,7 @@ public:
 
 	void clear();
 
-	bool checkCollision();
+	bool checkCollisions();
 
 	void draw(SDL_Renderer *renderer);
 

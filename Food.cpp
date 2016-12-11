@@ -3,12 +3,13 @@
 #include <cstdlib>
 #include "Point2D.hpp"
 
-void Food::generate()
+Point2D Food::generate()
 {
 	int x = rand() % (WINDOW_WIDTH / BLOCK_SIZE);
 	int y = rand() % (WINDOW_HEIGHT / BLOCK_SIZE);
 
 	m_position.set(x, y);
+	return m_position;
 }
 
 void Food::draw(SDL_Renderer* renderer) const

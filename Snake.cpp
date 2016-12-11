@@ -33,7 +33,7 @@ void Snake::right()
 		m_direction.set(1, 0);
 }
 
-bool Snake::checkBiten()
+bool Snake::checkBitten()
 {
 	for (int i = 0; i < m_tail.size()-1; i++)
 		if (m_position == m_tail[i])
@@ -43,11 +43,15 @@ bool Snake::checkBiten()
 
 bool Snake::checkFoodEaten(Food *food)
 {
-	if (getPosition() == food->getPosition())
-	{
-		++(*this);
-		food->generate();
-	}
+	return (getPosition() == food->getPosition());
+}
+
+bool Snake::containsBlock(Point2D block)
+{
+	for (const auto& snakeBlock : m_tail)
+		if (block == snakeBlock)
+			return true;
+	return false;
 }
 
 void Snake::update()
