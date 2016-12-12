@@ -4,36 +4,42 @@
 #include "Point2D.hpp"
 #include <vector>
 
-extern const int WINDOW_WIDTH;
-extern const int WINDOW_HEIGHT;
-extern const int BLOCK_SIZE;
-
+class Grid;
 class Food;
 
 class Snake
 {
 private:
 	Point2D m_position{1, 1};
+	Point2D m_direction{1, 0};
+
 	std::vector<Point2D> m_tail = { m_position };
 	int m_length = 1;
-	Point2D m_direction{1, 0};
+
+	Grid *m_grid = nullptr;
+	Food *m_food = nullptr;
+
+	void addGrid(Grid *grid);
 
 public:
 	Snake() {};
-	Point2D getPosition() const;
+	void addFood(Food *food);
 
-	Snake& operator++();
+	Point2D getPosition() const;
 
 	void up();
 	void down();
 	void left();
 	void right();
 
-	bool checkBiten();
-	bool checkFoodEaten(Food *food);
+	bool checkBitten();
+	bool checkFoodEaten();
+	bool containsBlock(Point2D block);
 
 	void update();
 	void draw(SDL_Renderer* renderer) const;
+
+	Snake& operator++();
 
 	friend class Grid;
 };

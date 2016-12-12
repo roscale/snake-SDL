@@ -6,15 +6,15 @@
 #include "Snake.hpp"
 #include "Food.hpp"
 
-Grid::Grid(int width, int height) :
-	m_width{width}, m_height{height}
+Grid::Grid(int width, int height, int blockSize) :
+	m_width{width}, m_height{height}, m_blockSize{blockSize}
 {
 	assert(width > 0 && height > 0);
 
+	// Reserve matrix
 	m_data.resize(width);
 	for (auto &v : m_data)
 		v.resize(height);
-
 	clear();
 
 	// Create walls
@@ -34,8 +34,20 @@ Grid::Grid(int width, int height) :
 	m_data[width/2][height/2] = BlockType::WALL;
 }
 
-void Grid::addSnake(Snake *snake) { m_snake = snake; }
-void Grid::addFood(Food *food) { m_food = food; }
+void Grid::addSnake(Snake *snake)
+{
+	m_snake = snake;
+	snake->addGrid(this);
+}
+void Grid::addFood(Food *food)
+{
+	m_food = food;
+	food->addGrid(this);
+}
+
+int Grid::getWidth() const { return m_width; };
+int Grid::getHeight() const { return m_height; };
+int Grid::getBlockSize() const { return m_blockSize; };
 
 void Grid::clear()
 {
@@ -44,13 +56,13 @@ void Grid::clear()
 			block = BlockType::AIR;
 }
 
-bool Grid::checkCollision()
+bool Grid::checkCollisions()
 {
-	if (m_snake->checkBiten())
+	m_snake->checkFoodEaten();
+	if (m_snake->checkBitten())
 		return true;
-	m_snake->checkFoodEaten(m_food);
 
-	if (m_data[m_snake->m_position.getX()][m_snake->m_position.getY()] != BlockType::AIR)
+	if (m_data[m_snake->m_position.x][m_snake->m_position.y] != BlockType::AIR)
 		return true;
 
 	return false;
@@ -66,12 +78,11 @@ void Grid::draw(SDL_Renderer *renderer)
 			{
 				case BlockType::WALL:
 					SDL_Rect blockRect = {
-						x * BLOCK_SIZE,
-						y * BLOCK_SIZE,
-						BLOCK_SIZE, BLOCK_SIZE };
+						x * m_blockSize,
+						y * m_blockSize,
+						m_blockSize, m_blockSize };
 
 					SDL_RenderFillRect(renderer, &blockRect);
-
 					break;
 			}
 }
@@ -83,13 +94,12 @@ std::ostream& operator<<(std::ostream &out, const Grid &grid)
 		for (int x = 0; x < grid.m_width; x++)
 			switch (grid.m_data[x][y])
 			{
-				case grid.BlockType::AIR:	out << ". "; break;
-				case grid.BlockType::WALL:	out << "W "; break;
+				case Grid::BlockType::AIR:		out << ". "; break;
+				case Grid::BlockType::WALL:	out << "W "; break;
 
 				default:	out << "U "; break;
 			}
 		out << '\n';
 	}
-
 	return out;
 }
