@@ -3,47 +3,58 @@
 #include <vector>
 #include "Point2D.hpp"
 #include "Food.hpp"
+#include "Grid.hpp"
+
+void Snake::addGrid(Grid *grid)
+{
+	m_grid = grid;
+}
+
+void Snake::addFood(Food *food)
+{
+	m_food = food;
+	food->addSnake(this);
+}
 
 Point2D Snake::getPosition() const { return m_position; }
-
-Snake& Snake::operator++()
-{
-	m_length++;
-	return *this;
-}
 
 void Snake::up()
 {
 	if (m_direction != Point2D{0, 1})
-		m_direction.set(0, -1);
+		m_direction = {0, -1};
 }
 void Snake::down()
 {
 	if (m_direction != Point2D{0, -1})
-		m_direction.set(0, 1);
+		m_direction = {0, 1};
 }
 void Snake::left()
 {
 	if (m_direction != Point2D{1, 0})
-		m_direction.set(-1, 0);
+		m_direction = {-1, 0};
 }
 void Snake::right()
 {
 	if (m_direction != Point2D{-1, 0})
-		m_direction.set(1, 0);
+		m_direction = {1, 0};
 }
 
 bool Snake::checkBitten()
 {
-	for (int i = 0; i < m_tail.size()-1; i++)
+	const int &head = m_tail.size()-1;
+	for (int i = 0; i < head; i++)
 		if (m_position == m_tail[i])
 			return true;
 	return false;
 }
 
-bool Snake::checkFoodEaten(Food *food)
+bool Snake::checkFoodEaten()
 {
-	return (getPosition() == food->getPosition());
+	if (getPosition() == m_food->getPosition())
+	{
+		m_food->generate();
+		++(*this);
+	}
 }
 
 bool Snake::containsBlock(Point2D block)
@@ -64,11 +75,12 @@ void Snake::update()
 	else
 	{
 		// shift all elements to the left
-		for (int i = 0; i < m_tail.size()-1; i++)
+		const int &head = m_tail.size()-1;
+		for (int i = 0; i < head; i++)
 			m_tail[i] = m_tail[i+1];
 
 		m_position += m_direction;
-		m_tail[m_tail.size()-1] = m_position;
+		m_tail[head] = m_position;
 	}
 }
 
@@ -76,13 +88,20 @@ void Snake::draw(SDL_Renderer* renderer) const
 {
 	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
 
-	for (const auto blockPoint : m_tail)
+	const int &blockSize = m_grid->getBlockSize();
+	for (const auto blockPos : m_tail)
 	{
 		SDL_Rect blockRect = {
-			blockPoint.getX() * BLOCK_SIZE,
-			blockPoint.getY() * BLOCK_SIZE,
-			BLOCK_SIZE, BLOCK_SIZE };
+			blockPos.x * blockSize,
+			blockPos.y * blockSize,
+			blockSize, blockSize };
 
 		SDL_RenderFillRect(renderer, &blockRect);
 	}
+}
+
+Snake& Snake::operator++()
+{
+	m_length++;
+	return *this;
 }

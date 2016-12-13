@@ -24,7 +24,6 @@ namespace MySDL
 			std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << '\n';
 			exit(2);
 		}
-
 		return window;
 	}
 
@@ -37,7 +36,6 @@ namespace MySDL
 			std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << '\n';
 			exit(3);
 		}
-
 		return renderer;
 	}
 }

@@ -2,13 +2,8 @@
 
 #include <SDL2/SDL.h>
 #include "Point2D.hpp"
-
-extern const int WINDOW_WIDTH;
-extern const int WINDOW_HEIGHT;
-extern const int BLOCK_SIZE;
-
-class Grid;
-class Snake;
+#include "Grid.hpp"
+#include "Snake.hpp"
 
 class Food
 {
@@ -18,12 +13,17 @@ private:
 	Grid *m_grid = nullptr;
 	Snake *m_snake = nullptr;
 
-	
-public:
-	Food() { }//generate(); }
+	void addGrid(Grid *grid);
+	void addSnake(Snake *snake);
 
-	Point2D generate();
-	void draw(SDL_Renderer* renderer) const;
+public:
+	Food() {}
+	void generate();
 
 	Point2D getPosition() const;
+
+	void draw(SDL_Renderer* renderer) const;
+
+	friend void Grid::addFood(Food *food);
+	friend void Snake::addFood(Food *food);
 };
