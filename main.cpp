@@ -6,16 +6,16 @@
 
 #include "sdl_helper.hpp"
 #include "Point2D.hpp"
+#include "Game.hpp"
 #include "Grid.hpp"
 #include "Snake.hpp"
 #include "Food.hpp"
 
-const int GRID_WIDTH = 40;
-const int GRID_HEIGHT = 40;
-const int BLOCK_SIZE = 20;
-
-const int WINDOW_WIDTH = GRID_WIDTH * BLOCK_SIZE;
-const int WINDOW_HEIGHT = GRID_WIDTH * BLOCK_SIZE;
+extern const int GRID_WIDTH = 40;
+extern const int GRID_HEIGHT = 40;
+extern const int BLOCK_SIZE = 20;
+extern const int WINDOW_WIDTH = GRID_WIDTH * BLOCK_SIZE;
+extern const int WINDOW_HEIGHT = GRID_WIDTH * BLOCK_SIZE;
 
 
 int main()
@@ -30,13 +30,19 @@ int main()
 	Grid grid(WINDOW_WIDTH / BLOCK_SIZE, WINDOW_HEIGHT / BLOCK_SIZE, BLOCK_SIZE);
 	std::cout << grid;
 
-	Snake snake;
-	Food food;
-
-	grid.addSnake(&snake);
-	grid.addFood(&food);
-	snake.addFood(&food);
+	Food food(&grid);
+	Snake snake(&grid, &food);
 	food.generate();
+
+	// grid.addSnake(&snake);
+	// grid.addFood(&food);
+	// snake.addGrid(&grid);
+	// snake.addFood(&food);
+	// food.addGrid(&grid);
+	// food.addSnake(&snake);
+	// food.generate();
+
+	Game game(&grid, &snake, &food);
 
 	while (1) {
 		SDL_Event e;
@@ -64,7 +70,7 @@ int main()
 		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 		SDL_RenderClear(renderer);
 
-		if (grid.checkCollisions()) { break; }
+		if (game.checkCollisions()) { break; }
 		snake.update();
 
 		grid.draw(renderer);

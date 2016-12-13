@@ -16,16 +16,15 @@ private:
 	std::vector<Point2D> m_tail = { m_position };
 	int m_length = 1;
 
-	Grid *m_grid = nullptr;
-	Food *m_food = nullptr;
+	Grid *p_grid = nullptr;
+	Food *p_food = nullptr;
 
-	void addGrid(Grid *grid);
+	// void addGrid(Grid *grid);
 
 public:
-	Snake() {};
-	void addFood(Food *food);
+	Snake(Grid *grid, Food *food);
 
-	Point2D getPosition() const;
+	const Point2D& getPosition() const;
 
 	void up();
 	void down();
@@ -41,5 +40,6 @@ public:
 
 	Snake& operator++();
 
+	friend class Game;
 	friend class Grid;
 };
