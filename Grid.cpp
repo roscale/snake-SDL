@@ -34,21 +34,21 @@ Grid::Grid(int width, int height, int blockSize) :
 	m_data[width/2][height/2] = BlockType::WALL;
 }
 
-void Grid::addSnake(Snake *snake)
-{
-	m_snake = snake;
-	snake->addGrid(this);
-}
-void Grid::addFood(Food *food)
-{
-	m_food = food;
-	food->addGrid(this);
-}
+// void Grid::addSnake(Snake *snake)
+// {
+// 	p_snake = snake;
+// 	snake->addGrid(this);
+// }
+// void Grid::addFood(Food *food)
+// {
+// 	p_food = food;
+// 	food->addGrid(this);
+// }
 
 Grid::BlockType Grid::at(int x, int y) { return m_data[x][y]; }
-int Grid::getWidth() const { return m_width; };
-int Grid::getHeight() const { return m_height; };
-int Grid::getBlockSize() const { return m_blockSize; };
+// int Grid::getWidth() const { return m_width; };
+// int Grid::getHeight() const { return m_height; };
+// int Grid::getBlockSize() const { return m_blockSize; };
 
 void Grid::clear()
 {
@@ -59,11 +59,11 @@ void Grid::clear()
 
 // bool Grid::checkCollisions()
 // {
-// 	m_snake->checkFoodEaten();
-// 	if (m_snake->checkBitten())
+// 	p_snake->checkFoodEaten();
+// 	if (p_snake->checkBitten())
 // 		return true;
 //
-// 	if (m_data[m_snake->m_position.x][m_snake->m_position.y] != BlockType::AIR)
+// 	if (m_data[p_snake->m_position.x][p_snake->m_position.y] != BlockType::AIR)
 // 		return true;
 //
 // 	return false;

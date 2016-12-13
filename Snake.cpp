@@ -1,3 +1,4 @@
+#include "globals.hpp"
 #include "Snake.hpp"
 #include <SDL2/SDL.h>
 #include <vector>
@@ -5,18 +6,12 @@
 #include "Food.hpp"
 #include "Grid.hpp"
 
-void Snake::addGrid(Grid *grid)
+Snake::Snake(Grid *grid, Food *food) : p_grid{grid}, p_food{food}
 {
-	m_grid = grid;
-}
-
-void Snake::addFood(Food *food)
-{
-	m_food = food;
 	food->addSnake(this);
 }
 
-Point2D Snake::getPosition() const { return m_position; }
+const Point2D& Snake::getPosition() const { return m_position; }
 
 void Snake::up()
 {
@@ -50,9 +45,9 @@ bool Snake::checkBitten()
 
 bool Snake::checkFoodEaten()
 {
-	if (getPosition() == m_food->getPosition())
+	if (getPosition() == p_food->getPosition())
 	{
-		m_food->generate();
+		p_food->generate();
 		++(*this);
 	}
 }
@@ -88,7 +83,7 @@ void Snake::draw(SDL_Renderer* renderer) const
 {
 	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
 
-	const int &blockSize = m_grid->getBlockSize();
+	const int &blockSize = BLOCK_SIZE;
 	for (const auto blockPos : m_tail)
 	{
 		SDL_Rect blockRect = {

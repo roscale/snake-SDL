@@ -7,9 +7,9 @@ class Food;
 class Game
 {
 private:
-  Grid *m_grid = nullptr;
-  Snake *m_snake = nullptr;
-  Food *m_food = nullptr;
+  Grid *p_grid = nullptr;
+  Snake *p_snake = nullptr;
+  Food *p_food = nullptr;
 
 public:
   Game(Grid *grid, Snake *snake, Food *food);
