@@ -28,22 +28,13 @@ int main()
 	SDL_Renderer* renderer = MySDL::createRenderer(window);
 
 	Grid grid(WINDOW_WIDTH / BLOCK_SIZE, WINDOW_HEIGHT / BLOCK_SIZE, BLOCK_SIZE);
-	std::cout << grid;
-
 	Food food(&grid);
-	Snake snake(&grid, &food);
+	Snake snake(&food);
 	food.generate();
-
-	// grid.addSnake(&snake);
-	// grid.addFood(&food);
-	// snake.addGrid(&grid);
-	// snake.addFood(&food);
-	// food.addGrid(&grid);
-	// food.addSnake(&snake);
-	// food.generate();
 
 	Game game(&grid, &snake, &food);
 
+	std::cout << grid;
 	while (1) {
 		SDL_Event e;
 		if (SDL_PollEvent(&e))

@@ -4,7 +4,6 @@
 #include "Point2D.hpp"
 #include <vector>
 
-class Grid;
 class Food;
 
 class Snake
@@ -16,13 +15,10 @@ private:
 	std::vector<Point2D> m_tail = { m_position };
 	int m_length = 1;
 
-	Grid *p_grid = nullptr;
 	Food *p_food = nullptr;
 
-	// void addGrid(Grid *grid);
-
 public:
-	Snake(Grid *grid, Food *food);
+	Snake(Food *food);
 
 	const Point2D& getPosition() const;
 

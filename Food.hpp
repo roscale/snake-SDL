@@ -26,6 +26,5 @@ public:
 
 	void draw(SDL_Renderer* renderer) const;
 
-	// friend void Grid::addFood(Food *food);
-	friend Snake::Snake(Grid *grid, Food *food);
+	friend Snake::Snake(Food *food);
 };

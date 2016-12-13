@@ -30,25 +30,18 @@ Grid::Grid(int width, int height, int blockSize) :
 	for (int h = height-1; h >= 0; h--)
 		m_data[width-1][h] = BlockType::WALL;
 
+
 	// Trolling is good
-	m_data[width/2][height/2] = BlockType::WALL;
+	for (int i = 0; i < width; i+=2)
+	{
+		m_data[i][i] = BlockType::WALL;
+		m_data[i][height - i] = BlockType::WALL;
+	}
+
+	//m_data[width/2][height/2] = BlockType::WALL;
 }
 
-// void Grid::addSnake(Snake *snake)
-// {
-// 	p_snake = snake;
-// 	snake->addGrid(this);
-// }
-// void Grid::addFood(Food *food)
-// {
-// 	p_food = food;
-// 	food->addGrid(this);
-// }
-
 Grid::BlockType Grid::at(int x, int y) { return m_data[x][y]; }
-// int Grid::getWidth() const { return m_width; };
-// int Grid::getHeight() const { return m_height; };
-// int Grid::getBlockSize() const { return m_blockSize; };
 
 void Grid::clear()
 {
@@ -56,18 +49,6 @@ void Grid::clear()
 		for (auto &block : column)
 			block = BlockType::AIR;
 }
-
-// bool Grid::checkCollisions()
-// {
-// 	p_snake->checkFoodEaten();
-// 	if (p_snake->checkBitten())
-// 		return true;
-//
-// 	if (m_data[p_snake->m_position.x][p_snake->m_position.y] != BlockType::AIR)
-// 		return true;
-//
-// 	return false;
-// }
 
 void Grid::draw(SDL_Renderer *renderer)
 {

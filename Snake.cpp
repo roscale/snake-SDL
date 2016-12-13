@@ -6,7 +6,7 @@
 #include "Food.hpp"
 #include "Grid.hpp"
 
-Snake::Snake(Grid *grid, Food *food) : p_grid{grid}, p_food{food}
+Snake::Snake(Food *food) : p_food{food}
 {
 	food->addSnake(this);
 }
