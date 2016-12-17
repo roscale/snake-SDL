@@ -20,6 +20,7 @@ private:
 public:
 	Food(Grid *grid);
 
+	bool checkEaten() const;
 	void generate();
 
 	Point2D getPosition() const;

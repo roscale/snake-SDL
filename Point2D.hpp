@@ -8,9 +8,7 @@ public:
 	int x = 0;
 	int y = 0;
 
-	Point2D()
-	{}
-	Point2D(int x, int y) : x{x}, y{y}
+	Point2D(int x = 0, int y = 0) : x{x}, y{y}
 	{}
 
 	friend Point2D operator+(const Point2D &p1, const Point2D &p2);

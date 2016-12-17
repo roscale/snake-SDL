@@ -1,4 +1,4 @@
-OBJS = sdl_helper.cpp Game.cpp Grid.cpp Point2D.cpp Snake.cpp Food.cpp main.cpp
+OBJS = Window.cpp Game.cpp Grid.cpp Snake.cpp Food.cpp Timer.cpp Point2D.cpp main.cpp
 
 CC = g++
 COMPILER_FLAGS = -w  -std=c++11

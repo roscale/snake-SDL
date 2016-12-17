@@ -1,13 +1,27 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include "Point2D.hpp"
 #include <vector>
+#include "Point2D.hpp"
+#include "Timer.hpp"
 
 class Food;
 
 class Snake
 {
+public:
+	enum class Direction
+	{
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT
+	};
+
+	Timer m_timer;
+	int m_delay = 300;
+	bool input_locked = false; // Prevent spam input
+
 private:
 	Point2D m_position{1, 1};
 	Point2D m_direction{1, 0};
@@ -22,16 +36,14 @@ public:
 
 	const Point2D& getPosition() const;
 
-	void up();
-	void down();
-	void left();
-	void right();
+	void turn(Direction newDir);
 
 	bool checkBitten();
-	bool checkFoodEaten();
 	bool containsBlock(Point2D block);
+	void speedUp();
 
 	void update();
+	void push();
 	void draw(SDL_Renderer* renderer) const;
 
 	Snake& operator++();

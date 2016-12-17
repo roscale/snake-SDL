@@ -4,37 +4,42 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "sdl_helper.hpp"
+#include "Window.hpp"
 #include "Point2D.hpp"
 #include "Game.hpp"
 #include "Grid.hpp"
 #include "Snake.hpp"
 #include "Food.hpp"
 
-extern const int GRID_WIDTH = 40;
-extern const int GRID_HEIGHT = 40;
-extern const int BLOCK_SIZE = 20;
-extern const int WINDOW_WIDTH = GRID_WIDTH * BLOCK_SIZE;
-extern const int WINDOW_HEIGHT = GRID_WIDTH * BLOCK_SIZE;
+const int Grid::WIDTH = 20;
+const int Grid::HEIGHT = 20;
+const int Grid::BLOCK_SIZE = 20;
 
+const int Window::WIDTH = Grid::WIDTH * Grid::BLOCK_SIZE;
+const int Window::HEIGHT = Grid::HEIGHT * Grid::BLOCK_SIZE;
+
+Grid *Game::p_grid = nullptr;
+Snake *Game::p_snake = nullptr;
+Food *Game::p_food = nullptr;
 
 int main()
 {
-	assert(BLOCK_SIZE > 0);
+	assert(Grid::BLOCK_SIZE > 0);
 	srand(time(0));
 
-	MySDL::init(SDL_INIT_VIDEO);
-	SDL_Window* window = MySDL::createWindow("Snake Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
-	SDL_Renderer* renderer = MySDL::createRenderer(window);
+	Window::init(SDL_INIT_VIDEO | SDL_RENDERER_PRESENTVSYNC | SDL_INIT_TIMER);
+	Window::createWindow("Snake Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Window::WIDTH, Window::HEIGHT, SDL_WINDOW_SHOWN);
+	Window::createRenderer();
 
-	Grid grid(WINDOW_WIDTH / BLOCK_SIZE, WINDOW_HEIGHT / BLOCK_SIZE, BLOCK_SIZE);
+	Grid grid;
+		std::cout << grid;
 	Food food(&grid);
 	Snake snake(&food);
 	food.generate();
 
-	Game game(&grid, &snake, &food);
+	Game::init(&grid, &snake, &food);
+	// SDL_TimerID tick = SDL_AddTimer(50, Game::gameTick, nullptr);
 
-	std::cout << grid;
 	while (1) {
 		SDL_Event e;
 		if (SDL_PollEvent(&e))
@@ -42,34 +47,45 @@ int main()
 			if (e.type == SDL_QUIT) {
 					break;
 			}
-			else if (e.type == SDL_KEYDOWN)
+			switch (e.type)
 			{
-				switch (e.key.keysym.sym) {
-					case SDLK_UP:
-						snake.up(); break;
-					case SDLK_DOWN:
-						snake.down(); break;
-					case SDLK_LEFT:
-						snake.left(); break;
-					case SDLK_RIGHT:
-						snake.right(); break;
-					default:
-						break;
-				}
+				case SDL_KEYDOWN:
+					switch (e.key.keysym.sym)
+					{
+						case SDLK_UP:
+							snake.turn(Snake::Direction::UP); break;
+						case SDLK_DOWN:
+							snake.turn(Snake::Direction::DOWN); break;
+						case SDLK_LEFT:
+							snake.turn(Snake::Direction::LEFT); break;
+						case SDLK_RIGHT:
+							snake.turn(Snake::Direction::RIGHT); break;
+						default:
+							break;
+					}
+					break;
+
+				// Game::gameTick
+				// case SDL_USEREVENT:
+				// 	SDL_SetRenderDrawColor(Window::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				// 	SDL_RenderClear(Window::renderer);
+				//
+				// 	if (Game::checkCollisions()) { exit(0); }
+				// 	Game::draw(Window::renderer);
+				//
+				// 	SDL_RenderPresent(Window::renderer);
+				// 	break;
 			}
 		}
-		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-		SDL_RenderClear(renderer);
+		SDL_SetRenderDrawColor(Window::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+		SDL_RenderClear(Window::renderer);
 
-		if (game.checkCollisions()) { break; }
-		snake.update();
+		if (Game::checkCollisions()) { exit(0); }
+		Game::draw(Window::renderer);
 
-		grid.draw(renderer);
-		food.draw(renderer);
-		snake.draw(renderer);
+		SDL_RenderPresent(Window::renderer);
 
-		SDL_RenderPresent(renderer);
-		SDL_Delay(50);
+		SDL_Delay(1);
 	}
 
 	SDL_Quit();
