@@ -64,17 +64,6 @@ int main()
 							break;
 					}
 					break;
-
-				// Game::gameTick
-				// case SDL_USEREVENT:
-				// 	SDL_SetRenderDrawColor(Window::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-				// 	SDL_RenderClear(Window::renderer);
-				//
-				// 	if (Game::checkCollisions()) { exit(0); }
-				// 	Game::draw(Window::renderer);
-				//
-				// 	SDL_RenderPresent(Window::renderer);
-				// 	break;
 			}
 		}
 		SDL_SetRenderDrawColor(Window::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -84,8 +73,7 @@ int main()
 		Game::draw(Window::renderer);
 
 		SDL_RenderPresent(Window::renderer);
-
-		SDL_Delay(1);
+		SDL_Delay(10);
 	}
 
 	SDL_Quit();

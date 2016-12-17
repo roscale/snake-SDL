@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
+#include <map>
 #include "Point2D.hpp"
 #include "Timer.hpp"
 
@@ -18,16 +19,19 @@ public:
 		RIGHT
 	};
 
-	Timer m_timer;
-	int m_delay = 300;
-	bool input_locked = false; // Prevent spam input
-
 private:
 	Point2D m_position{1, 1};
-	Point2D m_direction{1, 0};
+	Direction m_direction = Direction::RIGHT;
+
+	std::vector<Direction> input_cache;
+	static const std::map<Direction, Point2D> s_directionVectors;
+	static const int max_input_cache_size = 2;
 
 	std::vector<Point2D> m_tail = { m_position };
 	int m_length = 1;
+
+	Timer m_timer;
+	int m_delay = 300;
 
 	Food *p_food = nullptr;
 
@@ -40,8 +44,8 @@ public:
 
 	bool checkBitten();
 	bool containsBlock(Point2D block);
-	void speedUp();
 
+	void speedUp();
 	void update();
 	void push();
 	void draw(SDL_Renderer* renderer) const;

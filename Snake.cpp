@@ -1,9 +1,18 @@
 #include "Snake.hpp"
 #include <SDL2/SDL.h>
 #include <vector>
+#include <map>
 #include "Point2D.hpp"
 #include "Food.hpp"
 #include "Grid.hpp"
+
+const std::map<Snake::Direction, Point2D> Snake::s_directionVectors =
+{
+	{ Snake::Direction::UP,		Point2D{0, -1} },
+	{ Snake::Direction::DOWN,	Point2D{0, 1} },
+	{ Snake::Direction::LEFT,	Point2D{-1, 0} },
+	{ Snake::Direction::RIGHT,	Point2D{1, 0} }
+};
 
 Snake::Snake(Food *food) : p_food{food}
 {
@@ -15,28 +24,25 @@ const Point2D& Snake::getPosition() const { return m_position; }
 
 void Snake::turn(Snake::Direction newDir)
 {
-	if (input_locked)
+	// Filter by last direction taken
+	Direction lastDirection;
+	if (input_cache.size())
+		lastDirection = input_cache[input_cache.size()-1];
+	else
+		lastDirection = m_direction;
+
+	// Ignore if it's the same or opposite direction
+	if (newDir == lastDirection || Snake::s_directionVectors.at(newDir) == -Snake::s_directionVectors.at(lastDirection))
 		return;
 
-	switch (newDir) {
-		case Direction::UP:
-			if (m_direction != Point2D{0, 1})
-				m_direction = {0, -1};
-			break;
-		case Direction::DOWN:
-			if (m_direction != Point2D{0, -1})
-				m_direction = {0, 1};
-			break;
-		case Direction::LEFT:
-			if (m_direction != Point2D{1, 0})
-				m_direction = {-1, 0};
-			break;
-		case Direction::RIGHT:
-			if (m_direction != Point2D{-1, 0})
-				m_direction = {1, 0};
-			break;
-	}
-	input_locked = true;
+	input_cache.push_back(newDir);
+
+	if (input_cache.size() > Snake::max_input_cache_size)
+		input_cache.erase(input_cache.begin());
+
+	// There is one case where an invalid direction could be in the first position if you spam keys
+	if (m_direction == input_cache[0] || Snake::s_directionVectors.at(m_direction) == -Snake::s_directionVectors.at(input_cache[0]))
+		input_cache.erase(input_cache.begin());
 }
 
 bool Snake::checkBitten()
@@ -67,23 +73,31 @@ void Snake::speedUp()
 
 void Snake::update()
 {
-	std::cout << m_delay << " Tick: " << m_timer.getTicks() << '\n';
+	// std::cout << m_delay << " Tick: " << m_timer.getTicks() << '\n';
 	if (m_timer.getTicks() >= m_delay)
 	{
 		push();
 		m_timer.start();
-		input_locked = false;
 	}
 }
 
 void Snake::push()
 {
-	// keep length the same
-	if (m_tail.size() >= m_length)
-		m_tail.erase(m_tail.begin());
+	for (auto& dir : input_cache)
+		std::cout << Snake::s_directionVectors.at(dir) << " ";
+	std::cout << '\n';
 
-	m_position += m_direction;
+	if (input_cache.size())
+	{
+		m_direction = input_cache[0];
+		input_cache.erase(input_cache.begin());
+	}
+	m_position += Snake::s_directionVectors.at(m_direction);
 	m_tail.push_back(m_position);
+
+	// Keep length the same
+	if (m_tail.size() > m_length)
+		m_tail.erase(m_tail.begin());
 }
 
 void Snake::draw(SDL_Renderer* renderer) const
