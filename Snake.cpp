@@ -54,10 +54,10 @@ bool Snake::checkBitten()
 	return false;
 }
 
-bool Snake::containsBlock(Point2D block)
+bool Snake::containsPoint(Point2D point)
 {
 	for (const auto& snakeBlock : m_tail)
-		if (block == snakeBlock)
+		if (point == snakeBlock)
 			return true;
 	return false;
 }
@@ -113,6 +113,9 @@ void Snake::draw(SDL_Renderer* renderer) const
 
 		SDL_RenderFillRect(renderer, &blockRect);
 	}
+
+	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
+
 }
 
 Snake& Snake::operator++()

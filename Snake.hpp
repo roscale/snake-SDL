@@ -43,7 +43,7 @@ public:
 	void turn(Direction newDir);
 
 	bool checkBitten();
-	bool containsBlock(Point2D block);
+	bool containsPoint(Point2D point);
 
 	void speedUp();
 	void update();

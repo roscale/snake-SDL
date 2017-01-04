@@ -23,7 +23,7 @@ void Food::generate()
 		x = rand() % (Grid::WIDTH);
 		y = rand() % (Grid::HEIGHT);
 		m_position = {x, y};
-	} while (p_grid->at(x, y) != Grid::BlockType::AIR || p_snake->containsBlock(m_position));
+	} while (p_grid->at(x, y) != Grid::BlockType::AIR || p_snake->containsPoint(m_position));
 }
 
 void Food::draw(SDL_Renderer* renderer) const

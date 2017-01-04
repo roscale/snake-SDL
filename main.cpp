@@ -11,8 +11,8 @@
 #include "Snake.hpp"
 #include "Food.hpp"
 
-const int Grid::WIDTH = 20;
-const int Grid::HEIGHT = 20;
+const int Grid::WIDTH = 10;
+const int Grid::HEIGHT = 10;
 const int Grid::BLOCK_SIZE = 20;
 
 const int Window::WIDTH = Grid::WIDTH * Grid::BLOCK_SIZE;
@@ -66,6 +66,7 @@ int main()
 					break;
 			}
 		}
+		// Game logic
 		SDL_SetRenderDrawColor(Window::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 		SDL_RenderClear(Window::renderer);
 
@@ -73,7 +74,7 @@ int main()
 		Game::draw(Window::renderer);
 
 		SDL_RenderPresent(Window::renderer);
-		SDL_Delay(10);
+		SDL_Delay(5);
 	}
 
 	SDL_Quit();
